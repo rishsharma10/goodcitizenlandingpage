@@ -6,9 +6,11 @@ import {
   Instagram, 
   Twitter, 
   Youtube,
+  MessageCircle,
   Mail,
   Phone,
-  MapPin
+  MapPin,
+  MessageCircleMore
 } from "lucide-react";
 
 export function Footer() {
@@ -27,17 +29,17 @@ export function Footer() {
               Helping emergency vehicles reach their destinations faster and making our roads safer for everyone.
             </p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-slate-300 hover:text-white transition-colors">
+              <Link target="_blank" href="https://www.facebook.com/people/A-Good-Citizen/61576461897022/" className="text-slate-300 hover:text-white transition-colors">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-slate-300 hover:text-white transition-colors">
+              {/* <Link target="_blank" href="https://www.instagram.com/agoodcitizen_/" className="text-slate-300 hover:text-white transition-colors">
                 <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-slate-300 hover:text-white transition-colors">
+              </Link> */}
+              <Link target="_blank" href="https://www.instagram.com/agoodcitizen_/" className="text-slate-300 hover:text-white transition-colors">
                 <Instagram className="h-5 w-5" />
               </Link>
-              <Link href="#" className="text-slate-300 hover:text-white transition-colors">
-                <Youtube className="h-5 w-5" />
+              <Link target="_blank" href="https://api.whatsapp.com/send/?phone=919501770159&text=Hi,%20I%20have%20a%20quick%20question.%20Could%20you%20please%20help%20me%20with%20this?%20Thanks!&type=phone_number&app_absent=0" className="text-slate-300 hover:text-white transition-colors">
+                <MessageCircleMore className="h-5 w-5" />
               </Link>
             </div>
           </div>
@@ -89,15 +91,16 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-red-500 mt-0.5" />
-                <span className="text-slate-300">123 Safety Street, Rescue City, RC 10001</span>
+                <span className="text-slate-300">485 sector 21 Panchkula Haryana
+                134116</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Mail className="h-5 w-5 text-red-500 mt-0.5" />
-                <span className="text-slate-300">support@goodcitizen.app</span>
+                <span className="text-slate-300">amishmittal5959@gmail.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Phone className="h-5 w-5 text-red-500 mt-0.5" />
-                <span className="text-slate-300">+1 (555) 123-4567</span>
+                <span className="text-slate-300">+91 9501770159</span>
               </li>
             </ul>
           </div>

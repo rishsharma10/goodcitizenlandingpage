@@ -1,4 +1,4 @@
-export const APP_NAME = "GoodCitizen";
+export const APP_NAME = "Good Citizen";
 
 export const FEATURES = [
   {
