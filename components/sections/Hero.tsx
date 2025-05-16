@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Apple, Smartphone } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { APPSTORE_LINK, cn, GOOGLE_PLAY_LINK } from "@/lib/utils";
+import Link from "next/link";
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -54,14 +55,18 @@ export function Hero() {
               isVisible ? "opacity-100 transform-none" : "opacity-0 -translate-y-10"
             )}
           >
+            <Link href={APPSTORE_LINK} target="_blank">
             <Button size="lg" className="bg-red-500 hover:bg-red-600 h-14 px-8 rounded-full">
               <Apple className="mr-2 h-5 w-5" />
               App Store
             </Button>
+            </Link>
+            <Link href={GOOGLE_PLAY_LINK} target="_blank">
             <Button size="lg" variant="outline" className="h-14 px-8 rounded-full">
               <Smartphone className="mr-2 h-5 w-5" />
               Google Play
             </Button>
+            </Link>
           </div>
           
           <div 

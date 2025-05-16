@@ -11,10 +11,14 @@ import {
   Clock, 
   AlertTriangle 
 } from "lucide-react";
+import { useRouter } from "next/router";
+import { APPSTORE_LINK, GOOGLE_PLAY_LINK } from "@/lib/utils";
+import Link from "next/link";
 
 export function Download() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,14 +61,18 @@ export function Download() {
             </div>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
+              <Link href={APPSTORE_LINK} target="_blank">
               <Button size="lg" className="bg-white text-blue-700 hover:bg-blue-50 h-14 px-8">
                 <Apple className="mr-2 h-5 w-5" />
                 App Store
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-blue-700 h-14 px-8">
+              </Link>
+              <Link href={GOOGLE_PLAY_LINK} target="_blank">
+              <Button size="lg" className="border-white text-white hover:bg-blue-700 h-14 px-8">
                 <Smartphone className="mr-2 h-5 w-5" />
                 Google Play
               </Button>
+              </Link>
             </div>
           </div>
 

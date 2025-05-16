@@ -10,6 +10,7 @@ import {
   Smartphone,
   Headphones
 } from "lucide-react";
+import landAmbulance from "@/assest/landing_ambulance.jpg" 
 
 const iconMap: Record<string, React.ReactNode> = {
   "bell": <Bell className="h-6 w-6" />,
@@ -102,7 +103,7 @@ export function Features() {
             <div className="relative hidden md:block">
               <div className="absolute inset-0 bg-blue-500/10 rounded-full animate-pulse" style={{ animationDuration: '3s' }} />
               <img 
-                src="https://images.pexels.com/photos/13861/IMG_3496bfree.jpg?auto=compress&cs=tinysrgb&w=600" 
+                src={landAmbulance.src} 
                 alt="Emergency vehicle" 
                 className="relative z-10 rounded-lg shadow-lg transform -rotate-3"
               />
