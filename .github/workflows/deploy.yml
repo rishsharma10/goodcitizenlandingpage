@@ -1,0 +1,106 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master  # Live (Production)
+      - dev     # Dev (Development)
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Set environment variables based on branch
+        run: |
+          if [ "${GITHUB_REF##*/}" == "master" ]; then
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.LIVE_NEXT_PUBLIC_API_URL }}" >> $GITHUB_ENV
+          elif [ "${GITHUB_REF##*/}" == "dev" ]; then
+            echo "NEXT_PUBLIC_API_URL=${{ secrets.DEV_NEXT_PUBLIC_API_URL }}" >> $GITHUB_ENV
+          fi
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: List .next directory to verify it exists
+        run: ls -alh .next
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next/
+          include-hidden-files: true 
+
+  deploy_master:
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next/
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOSTDEV }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Master
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} << EOF
+          sudo rm -rf /var/www/html/goodcitizenlandingpagenextjs/.next
+          sudo mkdir -p /var/www/html/goodcitizenlandingpagenextjs/.next
+          sudo chmod 777 /var/www/html/goodcitizenlandingpagenextjs/.next
+          EOF
+
+          scp -i ~/.ssh/id_rsa -r .next/* ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/html/goodcitizenlandingpagenextjs/.next
+
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} "pm2 restart goodcitizenlandingpagenextjs"
+
+  deploy_dev:
+    needs: build
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: nextjs-build
+          path: .next/
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOSTDEV }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to Dev
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAMEDEV }}@${{ secrets.HOSTDEV }} << EOF
+          sudo rm -rf /var/www/html/goodcitizenlandingpagenextjs/.next
+          sudo mkdir -p /var/www/html/goodcitizenlandingpagenextjs/.next
+          sudo chmod 777 /var/www/html/goodcitizenlandingpagenextjs/.next
+          EOF
+
+          scp -i ~/.ssh/id_rsa -r .next/* ${{ secrets.USERNAMEDEV }}@${{ secrets.HOSTDEV }}:/var/www/html/goodcitizenlandingpagenextjs/.next
+
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAMEDEV }}@${{ secrets.HOSTDEV }} "pm2 restart goodcitizenlandingpagenextjs"
